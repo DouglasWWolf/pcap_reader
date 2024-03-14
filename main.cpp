@@ -27,14 +27,17 @@ int main()
 void execute()
 {
     pcap_packet_t packet;
-    
-    reader.open("ch0_packets.pcap");
+    eth_header_t header;
+
+    reader.open("chargen-udp.pcap");
 
     while (reader.get_next_packet(&packet))
     {
         printf("Timestamp        : %u seconds, %u ns\n", packet.ts_seconds, packet.ts_nanoseconds);
         printf("Data Length      : %u bytes\n", packet.length);
         printf("First three bytes: 0x%02X  0x%02X  0x%02X\n", packet.data[0], packet.data[1], packet.data[2]);
+        
+        reader.parse_packet_headers(packet.data, &header);
         printf("\n");
     }
 }

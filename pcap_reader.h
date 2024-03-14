@@ -4,6 +4,76 @@
 //                 to be little-endian.
 //=============================================================================
 #include <string>
+#include <cstdint>
+
+
+//=============================================================================
+// Fields broken out from an Ethernet/IPv4/UDP/RDMX packet
+//=============================================================================
+struct eth_header_t
+{
+    //----------------------------------------------------------------------
+    // These "is_xxx" fields are cumulative - if one of them is 'true', it 
+    // implies that all of the "is_xxx" fields above it are also true.
+    //
+    // For example, if "is_rdmx" is true, then "is_udp", "is_ipv4" and 
+    // "is_ethernet" are all also gauranteed to be true.
+    //----------------------------------------------------------------------
+
+    // Is this packet probably an Ethernet packet?
+    bool        is_ethernet;
+    
+    // Is this packet probably a simple IPv4 packet?
+    bool        is_ipv4;
+    
+    // Is this packet probably a UDP packet?
+    bool        is_udp;
+    
+    // Is this packet probablky an RDMX packet?
+    bool        is_rdmx;
+
+    uint8_t     eth_dst_mac[6];
+    uint8_t     eth_src_mac[6];
+    uint16_t    eth_type;
+    
+    uint8_t     ip4_version;
+    uint8_t     ip4_dsf;
+    uint16_t    ip4_length;
+    uint16_t    ip4_id;
+    uint16_t    ip4_flags;
+    uint8_t     ip4_ttl;
+    uint8_t     ip4_protocol;
+    uint16_t    ip4_checksum;
+    uint32_t    ip4_src_ip;
+    uint32_t    ip4_dst_ip;
+
+    uint16_t    udp_src_port;
+    uint16_t    udp_dst_port;
+    uint16_t    udp_length;
+    uint16_t    udp_checksum;
+
+    uint16_t    rdmx_magic;
+    uint64_t    rdmx_target;
+};
+//=============================================================================
+
+
+//=============================================================================
+// This is the header of a PCAP file
+//=============================================================================
+#pragma pack(push, 1)
+struct pcap_header_t
+{
+    uint32_t    magic_number;
+    uint16_t    major_version;
+    uint16_t    minor_version;
+    uint32_t    reserved1;
+    uint32_t    reserved2;
+    uint32_t    snaplen;
+    uint32_t    link_type;
+};
+#pragma pack(pop)
+//=============================================================================
 
 
 //=============================================================================
@@ -46,10 +116,16 @@ public:
     // Call this to close the input file
     void    close();
 
+    // This parses the headers of a raw packet into fields
+    void    parse_packet_headers(unsigned char* data, eth_header_t* header);
+
 protected:
 
     FILE*   fp_;
- 
+
+    // This is the PCAP file header that was read in
+    pcap_header_t header_;
+
 };
 //=============================================================================
 
