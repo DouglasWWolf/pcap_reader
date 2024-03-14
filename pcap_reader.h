@@ -17,7 +17,7 @@ struct pcap_packet_t
     uint32_t    ts_nanoseconds;
     uint32_t    length;
     uint32_t    reserved;
-    uint8_t     data[100000];
+    uint8_t     data[10000];
 };
 #pragma pack(pop)
 //=============================================================================
