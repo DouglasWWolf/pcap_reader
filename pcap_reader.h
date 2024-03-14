@@ -32,7 +32,7 @@ public:
 
     // Constructor / destructor
     CPcapReader() {fp_ = nullptr;}
-    ~CPcapReader() {if (fp_) fclose(fp_);}
+    ~CPcapReader() {close();}
 
     // Call this to open a PCAP file.
     // Will throw std::runtime_error on failure.
@@ -42,6 +42,9 @@ public:
     // are no more packets available to read.  
     // Will throw std::runtime_error on failure.    
     bool    get_next_packet(pcap_packet_t*);
+
+    // Call this to close the input file
+    void    close();
 
 protected:
 
