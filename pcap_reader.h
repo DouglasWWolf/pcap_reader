@@ -29,7 +29,7 @@ struct eth_header_t
     // Is this packet probably a UDP packet?
     bool        is_udp;
     
-    // Is this packet probablky an RDMX packet?
+    // Is this packet probably an RDMX packet?
     bool        is_rdmx;
 
     uint8_t     eth_dst_mac[6];
