@@ -272,7 +272,7 @@ void CPcapReader::parse_packet_headers(unsigned char* data, eth_header_t* header
     result.rdmx_magic   = swap16(no_packet.rdmx_magic);
     result.rdmx_target  = swap64(no_packet.rdmx_target);
 
-    // Is there is Ethernet packet that we understand?
+    // Is this an Ethernet packet that we understand?
     result.is_ethernet = (result.eth_type == 0x800);
 
     // Is this an IPv4 packet that we understand?
